@@ -1,6 +1,8 @@
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.utils.html import strip_tags
+
 
 class CustomUserManager(BaseUserManager):
     # метод для создания обычного пользователя
@@ -29,13 +31,14 @@ class CustomUserManager(BaseUserManager):
         # возврат созданного пользователя
         return user
 
+
     # Метод для создания суперпользователя (администратора)
     def create_superuser(self, email, first_name, last_name, password=None, **extra_fields):
 
         extra_fields.setdefault("is_staff", True) # доступ к админке
         extra_fields.setdefault("is_superuser", True) # все права
 
-        if extra_fields.get("is_stuff") is not True:
+        if extra_fields.get("is_staff") is not True:
             raise ValueError("superuser must have is_staff=True")
         if extra_fields.get("is_superuser") is not True:
             raise ValueError("superuser must have is_superuser=True")
@@ -62,6 +65,23 @@ class CustomUser(AbstractUser):
     # Указываем, что поле email будет использоваться как идентификатор пользователя (вместо username)
     USERNAME_FIELD = "email"
 
+    REQUIRED_FIELDS = ["first_name", "last_name"]
+
     def __str__(self):
         return self.email
+
+    def clean(self):
+        for field in [
+            "address1",
+            "address2",
+            "city",
+            "country",
+            "province",
+            "postal_code",
+            "phone",
+        ]:
+            value = getattr(self, field)
+            if value:
+                setattr(self, field, strip_tags(value))
+
 
