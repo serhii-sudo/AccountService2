@@ -1,10 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-</body>
-</html>
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<main class="flex-fill py-4">
+    <div class="container mt-5 text-center">
+        <h1>Welcome to MySite!</h1>
+    </div>
+</main>
+{% endblock %}
