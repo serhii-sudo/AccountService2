@@ -1,0 +1,23 @@
+/* static/css/styles.css */
+
+/* Немного отступов для форм */
+form {
+    max-width: 500px;
+    margin: 0;
+}
+
+/* Красивые checkbox */
+.form-check-label {
+    margin-left: 0.3rem;
+}
+
+/* Кнопки */
+button.btn {
+    width: 100%;
+}
+
+/* Ошибки формы */
+.text-danger {
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
