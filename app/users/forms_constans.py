@@ -6,7 +6,7 @@ BASE_WIDGET_ATTRS = {
 ERROR_MESSAGES = {
     "email": {
         "required": "Email is required",
-        "min_length": "Email must be at least 2 characters",
+        "min_length": "Email must be at least 5 characters",
         "max_length": "Email cannot exceed 66 characters",
     },
 
