@@ -32,5 +32,10 @@ ERROR_MESSAGES = {
         "required": "Password is required",
         "min_length": "Password must be at least 8 characters long",
         "max_length": "Password cannot exceed 66 characters",
+    },
+
+    "password2": {
+        "required": "Password confirmation is required",
+        "password_mismatch": "Passwords do not match",
     }
 }
