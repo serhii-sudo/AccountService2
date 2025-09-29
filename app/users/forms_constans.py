@@ -28,7 +28,7 @@ ERROR_MESSAGES = {
         "max_length": "Username cannot exceed 50 characters",
     },
 
-    "password": {
+    "password1": {
         "required": "Password is required",
         "min_length": "Password must be at least 8 characters long",
         "max_length": "Password cannot exceed 66 characters",
