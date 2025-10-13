@@ -12,8 +12,6 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 import os
 from pathlib import Path
-
-
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -31,7 +29,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["*", "192.168.0.212"]
 
 
 # Application definition
@@ -54,7 +52,9 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'users.middleware.SessionExpiryMiddleware', #
 ]
+
 
 ROOT_URLCONF = "app.urls"
 
@@ -115,7 +115,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Europe/Kyiv"
 
 USE_I18N = True
 
@@ -128,9 +128,38 @@ USE_TZ = True
 STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
+"""redis"""
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "SERIALIZER": "django_redis.serializers.pickle.PickleSerializer",
+        },
+    }
+}
+
+SESSION_COOKIE_AGE = 60   # время жизни сессии в секундах
+SESSION_SAVE_EVERY_REQUEST = True  # сохраняет сессию при каждом запросе
+
+# безопасность куки
+SESSION_COOKIE_SECURE = False  # отправляет куки по https
+SESSION_COOKIE_HTTPONLY = True  # js не сможет прочитать куки для атаки
+SESSION_COOKIE_SAMESITE = "Lax" # защита от csrf атак
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False # Сессия не исчезает при закрытии браузера
+SESSION_SAVE_EVERY_REQUEST = False # noqa
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+LOGIN_URL = 'login'  # имя URL из urls.py для логина
+LOGIN_REDIRECT_URL = 'profile_update'  # куда перенаправлять после успешного логина
+LOGOUT_REDIRECT_URL = 'home'
 
 AUTH_USER_MODEL = "users.CustomUser"
