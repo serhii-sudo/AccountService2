@@ -29,7 +29,8 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*", "192.168.0.212"]
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", "192.168.0.212"]
+
 
 
 # Application definition
@@ -52,7 +53,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    'users.middleware.SessionExpiryMiddleware', #
+    'users.middleware.SessionExpiryMiddleware', # connect to middleware.py
 ]
 
 
@@ -143,7 +144,7 @@ CACHES = {
     }
 }
 
-SESSION_COOKIE_AGE = 60   # время жизни сессии в секундах
+SESSION_COOKIE_AGE = 60    # время жизни сессии в секундах
 SESSION_SAVE_EVERY_REQUEST = True  # сохраняет сессию при каждом запросе
 
 # безопасность куки
