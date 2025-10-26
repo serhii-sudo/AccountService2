@@ -126,8 +126,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"   # — URL для доступа к статическим файлам через браузер
+STATIC_ROOT = "/app/staticfiles"
 STATICFILES_DIRS = [BASE_DIR / 'static']
+
 
 """redis"""
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
@@ -136,7 +138,7 @@ SESSION_CACHE_ALIAS = "default"
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379",
+        "LOCATION": os.getenv("REDIS_URL", "redis://redis:6379"),
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
             "SERIALIZER": "django_redis.serializers.pickle.PickleSerializer",

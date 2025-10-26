@@ -8,6 +8,7 @@ ERROR_MESSAGES = {
         "required": "Email is required",
         "min_length": "Email must be at least 5 characters",
         "max_length": "Email cannot exceed 66 characters",
+        #"name_error": "'email' is not defined"
     },
 
     "first_name": {
@@ -32,6 +33,7 @@ ERROR_MESSAGES = {
         "required": "Password is required",
         "min_length": "Password must be at least 8 characters long",
         "max_length": "Password cannot exceed 66 characters",
+        #"name_error": "'password' is not defined please return to register!"
     },
 
     "password2": {

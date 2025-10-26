@@ -12,7 +12,7 @@ class CustomUserAdmin(UserAdmin):
 
     list_display = (
         "colored_email", "first_name", "last_name",
-        "country", "city", "phone", "date_joined",
+        "country", "phone", "date_joined",
         "is_active", "is_staff", "is_superuser"
     )
     search_fields = (

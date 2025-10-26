@@ -11,6 +11,14 @@
 
     <!-- Optional: собственные стили -->
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <!--     for Chrome / Edge / Firefox   -->
+    <link rel="icon" type="image/svg+xml"  href="{% static 'img/favicon.svg' %}">
+    <!--     for Safari browser  -->
+    <link rel="icon" type="image/png" sizes="64x64" href="{% static 'img/favicon.png' %}">
+    <!-- for older browsers , заглушка для django -->
+    <link rel="icon" type="image/ico" sizes="64x64" href="{% static 'img/favicon.ico' %}">
+
 </head>
 <body class="d-flex flex-column min-vh-100">
 <!-- Навбар -->

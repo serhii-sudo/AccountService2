@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 
 from users.forms import CustomUserUpdateForm
-from users.forms_constans import ERROR_MESSAGES
+
 
 
 class TestUserUpdateForm(TestCase):
@@ -28,7 +28,7 @@ class TestUserUpdateForm(TestCase):
         form = CustomUserUpdateForm(data=data, instance=self.user)
         self.assertTrue(form.is_valid(), form.errors)
 
-        user = form.save()
+        form.save()
         self.user.refresh_from_db()
 
         self.assertFalse(self.user.check_password('passlam123@'))

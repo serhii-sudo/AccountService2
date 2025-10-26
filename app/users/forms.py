@@ -18,7 +18,7 @@ class CustomUserCreationForm(StripCharFieldMixin, UserCreationForm):
     # forms.EmailField — это тип поля формы Django, предназначенный для валидации email-адресов.
     email = forms.EmailField(
         required=True,  # Поле обязательно для заполнения.
-        min_length=2,
+        min_length=5,
         max_length=66,  # Максимальная длина email — 66 символов.
         widget=forms.EmailInput(  # Указывает, что для этого поля используется HTML-элемент <input type="email">.
             attrs={  # Атрибуты HTML для поля ввода.
@@ -57,7 +57,7 @@ class CustomUserCreationForm(StripCharFieldMixin, UserCreationForm):
 
     password1 = forms.CharField(
         required=True,
-        min_length=2,
+        min_length=8,
         max_length=66,
         widget=forms.PasswordInput(
             attrs={
@@ -65,12 +65,12 @@ class CustomUserCreationForm(StripCharFieldMixin, UserCreationForm):
                 "placeholder": "Password"
             }
         ),
-        error_messages=ERROR_MESSAGES["password"]
+        error_messages=ERROR_MESSAGES["password1"]
     )
 
     password2 = forms.CharField(
         required=True,
-        min_length=2,
+        min_length=8,
         max_length=66,
         widget=forms.PasswordInput(
             attrs={
@@ -78,7 +78,7 @@ class CustomUserCreationForm(StripCharFieldMixin, UserCreationForm):
                 "placeholder": "Confirm password"
             }
         ),
-        error_messages=ERROR_MESSAGES["password"]
+        error_messages=ERROR_MESSAGES["password2"]
 
     )
     # Чекбокс согласия на получение маркетинговых рассылок
@@ -114,6 +114,7 @@ class CustomUserCreationForm(StripCharFieldMixin, UserCreationForm):
             "marketing_consent2",
         )
 
+
     # Метод валидации email (будет вызван автоматически при вызове form.is_valid())
     def clean_email(self):
         email = self.cleaned_data.get("email").lower()  # Получаем введённый email
@@ -135,21 +136,21 @@ class CustomUserLoginForm(StripCharFieldMixin, AuthenticationForm):
     username = forms.CharField(
         label="Email",
         required=True,
-        min_length=2,
+        min_length=5,
         max_length=66,
         widget=forms.TextInput(
             attrs={
                 "autofocus": True,
                 **BASE_WIDGET_ATTRS,
-                "placeholder": "Your username"
+                "placeholder": "Your email"
             }
         ),
-        error_messages=ERROR_MESSAGES["username"]
+        error_messages=ERROR_MESSAGES["email"]
     )
 
     password = forms.CharField(
         required=True,
-        min_length=2,
+        min_length=8,
         max_length=66,
         label="Password",
         widget=forms.PasswordInput(
@@ -158,7 +159,7 @@ class CustomUserLoginForm(StripCharFieldMixin, AuthenticationForm):
                 "placeholder": "Your password"
             }
         ),
-        error_messages=ERROR_MESSAGES["password"]
+        error_messages=ERROR_MESSAGES["password1"]
     )
 
     def clean(self):
@@ -174,8 +175,8 @@ class CustomUserLoginForm(StripCharFieldMixin, AuthenticationForm):
 
 class CustomUserUpdateForm(StripCharFieldMixin, forms.ModelForm):
     email = forms.EmailField(
-        required=True,
-        min_length=2,
+        required=False,
+        min_length=5,
         max_length=66,
         label='Email',
         widget=forms.EmailInput(
@@ -190,7 +191,7 @@ class CustomUserUpdateForm(StripCharFieldMixin, forms.ModelForm):
     )
 
     password = forms.CharField(
-        required=True,
+        required=False,
         min_length=8,
         max_length=66,
         label="New_Password",
@@ -200,7 +201,7 @@ class CustomUserUpdateForm(StripCharFieldMixin, forms.ModelForm):
                 "placeholder": "Your new_password"
             }
         ),
-        error_messages=ERROR_MESSAGES["password"]
+        error_messages=ERROR_MESSAGES["password1"]
     )
 
     first_name = forms.CharField(
@@ -243,7 +244,7 @@ class CustomUserUpdateForm(StripCharFieldMixin, forms.ModelForm):
         widget=forms.TextInput(
             attrs={
                 **BASE_WIDGET_ATTRS,
-                'placeholder': '+1234567890...',
+                'placeholder': 'The phone starts with +1234567890...',
                 'pattern': r'^\+[1-9]\d+$'  # HTML5 валидация
             }
         ),
@@ -265,7 +266,7 @@ class CustomUserUpdateForm(StripCharFieldMixin, forms.ModelForm):
         widget=forms.TextInput(
             attrs={
                 **BASE_WIDGET_ATTRS,
-                'placeholder': '12345'
+                'placeholder': 'Postal code'
             }
         ),
         error_messages={
@@ -295,21 +296,23 @@ class CustomUserUpdateForm(StripCharFieldMixin, forms.ModelForm):
         )
     )
 
-    city = forms.CharField(
+    #Поле для ввода страны.
+    country = forms.CharField(
         required=False,
         max_length=100,
         widget=forms.TextInput(
             attrs={
                 **BASE_WIDGET_ATTRS,
-                'placeholder': 'City'
+                'placeholder': 'Country'
             }
         )
     )
 
+
     class Meta:
         model = CustomUser
         fields = [
-            'first_name', 'last_name', 'email', 'city', 'country',
+            'first_name', 'last_name', 'email', 'country',
             'address1', 'address2', 'postal_code', 'phone'
         ]
 
@@ -324,7 +327,6 @@ class CustomUserUpdateForm(StripCharFieldMixin, forms.ModelForm):
             attrs={**BASE_WIDGET_ATTRS},  # 1. Атрибуты HTML-элемента
             choices=[('', 'Select country')] + CustomUser.COUNTRY_CHOICES  # 2. Список выбора
         )
-
 
     def clean_phone(self):
         phone = self.cleaned_data.get('phone', '').strip()
@@ -355,7 +357,7 @@ class CustomUserUpdateForm(StripCharFieldMixin, forms.ModelForm):
             if field_name in cleaned_data:
                 cleaned_data[field_name] = bleach.clean(cleaned_data[field_name])
         if cleaned_data.get('address1') and not cleaned_data.get('city'):
-            self.add_error('city', 'City is required when providing address')
+            self.add_error('city', 'City is required when providing address!')
         return cleaned_data
 
 

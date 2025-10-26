@@ -60,6 +60,9 @@ class CustomUser(AbstractUser):
         ('ZA', 'South Africa, Cape Town +27 21')
     ]
 
+    # оставляем "Select country" первым, остальные сортируем по названию
+    COUNTRY_CHOICES = sorted(COUNTRY_CHOICES[1:], key=lambda x: x[1])
+
 
     # Обычно для страны используют max_length=2 (если хранят ISO-коды типа US, RU, GB), потому что выборка идёт по коду, а не по полному названию.
     email = models.EmailField(unique=True, max_length=70)
@@ -67,7 +70,6 @@ class CustomUser(AbstractUser):
     last_name = models.CharField(max_length=50)
     address1 = models.CharField(max_length=100, blank=True, null=True)
     address2 = models.CharField(max_length=100, blank=True, null=True)
-    city = models.CharField(max_length=50, blank=True, null=True)
     country = models.CharField(max_length=50, blank=True, null=True, choices=COUNTRY_CHOICES)
     provinces = models.CharField(max_length=50, blank=True, null=True)
     postal_code = models.CharField(max_length=50, blank=True, null=True)
@@ -89,7 +91,6 @@ class CustomUser(AbstractUser):
         for field in [
             "address1",
             "address2",
-            "city",
             "country",
             "provinces",
             "postal_code",
