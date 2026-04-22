@@ -30,7 +30,7 @@ class SessionExpiryMiddleware(MiddlewareMixin):
                                           └─ Нет → Обновить last_activity → Продолжить
     """
 
-    def process_request(self, request):    # ?
+    def process_request(self, request):  # ?
         # Пропускаем для неаутентифицированных пользователей
         if not request.user.is_authenticated:
             return None
@@ -38,11 +38,11 @@ class SessionExpiryMiddleware(MiddlewareMixin):
         # Пропускаем для страниц logout и login, чтобы избежать циклических редиректов
         current_path = request.path
         try:
-            login_url = reverse(settings.LOGIN_URL) if hasattr(settings, 'LOGIN_URL') else '/login/'
+            login_url = reverse(settings.LOGIN_URL) if hasattr(settings, "LOGIN_URL") else "/login/"
             logout_url = reverse(settings.LOGOUT_REDIRECT_URL)
         except:
-            login_url = '/login/'
-            logout_url = '/logout/'
+            login_url = "/login/"
+            logout_url = "/logout/"
 
         if current_path in [login_url, logout_url]:
             return None
@@ -51,16 +51,17 @@ class SessionExpiryMiddleware(MiddlewareMixin):
         current_time = time.time()
 
         # Получаем время последней активности из сессии
-        last_activity = request.session.get('last_activity')
+        last_activity = request.session.get("last_activity")
 
         # Если это первый запрос после логина, сохраняем время
         if last_activity is None:
-            request.session['last_activity'] = current_time
-            request.session['session_created_at'] = current_time
+            request.session["last_activity"] = current_time
+            request.session["session_created_at"] = current_time
             return None
 
         # Вычисляем максимальное время жизни сессии
-        session_cookie_age = getattr(settings, 'SESSION_COOKIE_AGE', 1209600)  # По умолчанию 2 недели
+        # 3600 сек, если по каким-то причинам в setting.py, не определено время жизни сессии
+        session_cookie_age = getattr(settings, "SESSION_COOKIE_AGE", 3600)
 
         # Проверяем, истекла ли сессия
         time_since_last_activity = current_time - last_activity
@@ -70,18 +71,18 @@ class SessionExpiryMiddleware(MiddlewareMixin):
             logout(request)
 
             # Редиректим на главную страницу или LOGOUT_REDIRECT_URL
-            redirect_url = getattr(settings, 'LOGOUT_REDIRECT_URL', 'home')
+            redirect_url = getattr(settings, "LOGOUT_REDIRECT_URL", "home")
 
             # Если redirect_url - это имя URL, преобразуем в путь
             try:
                 redirect_path = reverse(redirect_url)
             except:
-                redirect_path = redirect_url if redirect_url.startswith('/') else f'/{redirect_url}'
+                redirect_path = redirect_url if redirect_url.startswith("/") else f"/{redirect_url}"
 
             return redirect(redirect_path)
 
         # Обновляем время последней активности
         # Это создает "скользящее окно" - сессия продлевается при каждом запросе
-        request.session['last_activity'] = current_time
+        request.session["last_activity"] = current_time
 
         return None

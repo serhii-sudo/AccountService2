@@ -5,37 +5,39 @@
 {% block content %}
 
 <div class="container mt-5">
-    <form method="post" novalidate>
-        {% csrf_token %}
-         {{ form.non_field_errors }}
+    <div class="col-md-4">
+        <h5 class="text-center mb-4">Login</h5>
+        <form method="post" novalidate>
+            {% csrf_token %}
+             {{ form.non_field_errors }}
 
-        <!-- email -->
-        <div class="mb-3">
-            {{ form.username.label_tag }}
-            {{ form.username }}
-            {% for error in form.username.errors %}
-                <div class="text-danger">{{ error }}</div>
-            {% endfor %}
-        </div>
+            <!-- email -->
+            <div class="mb-3">
+                {{ form.username.label_tag }}
+                {{ form.username }}
+                {% for error in form.username.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
 
-        <!-- password -->
-        <div class="mb-3">
-            {{ form.password.label_tag }}
-            {{ form.password }}
-            {% for error in form.password.errors %}
-                 <div class="text-danger">{{ error }}</div>
-            {% endfor %}
-        </div>
+            <!-- password -->
+            <div class="mb-3">
+                {{ form.password.label_tag }}
+                {{ form.password }}
+                {% for error in form.password.errors %}
+                     <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
 
-        <!-- buttons -->
-
-        <div class="mb-2">
-            <button type="submit" class="btn btn-success">Sing in</button>
-        </div>
-        <div class="mb-2">
-            <button type="submit" class="btn btn-danger">Forgot Password?</button>
-        </div>
-    </form>
+            <!-- buttons -->
+            <div class="mb-2">
+                <button type="submit" class="btn btn-success">Sing in</button>
+            </div>
+            <div class="mb-2">
+                <a href="{% url 'password_reset' %}" class="btn btn-danger btn-block w-100">Forgot Password?</a>
+            </div>
+        </form>
+    </div>
 </div>
 
 {% endblock %}

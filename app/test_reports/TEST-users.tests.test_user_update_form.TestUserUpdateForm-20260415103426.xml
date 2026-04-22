@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="users.tests.test_user_update_form.TestUserUpdateForm-20260415103426" tests="1" file="users/tests/test_user_update_form.py" time="0.942" timestamp="2026-04-15T10:34:27" failures="0" errors="0" skipped="0">
+	<testcase classname="users.tests.test_user_update_form.TestUserUpdateForm" name="test_change_password" time="0.942" timestamp="2026-04-15T10:34:27" file="users/tests/test_user_update_form.py" line="14"/>
+</testsuite>

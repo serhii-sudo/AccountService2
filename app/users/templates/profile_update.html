@@ -4,99 +4,114 @@
 
 {% block content %}
 
-
 <div class="container mt-5">
-    <h4 class="text-center mb-4">Update Your Profile</h4>
-    {% if messages %}
-    <div class="mt-3">
-        {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-        {% endfor %}
+    <div class="col-md-4">
+     <h5 class="text-center mb-4">Update Your Profile</h5>
+        {% if messages %}
+        <div class="mt-3">
+            {% for message in messages %}
+            {% if message.tags == "success" %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+            {% elif message.tags == "warning" %}
+            <div class="alert alert-warning">
+                {{ message }}
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <form method="post" novalidate>
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+
+            <!-- email -->
+            <div class="mb-3">
+                {{ form.email.label_tag }}
+                {{ form.email }}
+                {% for error in form.email.errors %}
+                <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <!-- password -->
+            <div class="mb-3">
+                {{ form.password.label_tag }}
+                {{ form.password }}
+                {% for error in form.password.errors %}
+                <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <!-- first_name -->
+            <div class="mb-3">
+                {{ form.first_name.label_tag }}
+                {{ form.first_name }}
+                {% for error in form.first_name.errors %}
+                <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <!-- last_name -->
+            <div class="mb-3">
+                {{ form.last_name.label_tag }}
+                {{ form.last_name }}
+                {% for error in form.last_name.errors %}
+                <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+
+            <!-- phone -->
+            <div class="mb-3">
+                {{ form.phone.label_tag }}
+                {{ form.phone }}
+                {{ form.phone.errors|linebreaksbr }}
+            </div>
+
+            <!-- postal_code -->
+            <div class="mb-3">
+                {{ form.postal_code.label_tag }}
+                {{ form.postal_code }}
+                {{ form.postal_code.errors}}
+            </div>
+
+            <!-- address1 -->
+            <div class="mb-3">
+                {{ form.address1.label_tag }}
+                {{ form.address1 }}
+                {{ form.address1.errors }}
+            </div>
+
+            <!-- address2 -->
+            <div class="mb-3">
+                {{ form.address2.label_tag }}
+                {{ form.address2 }}
+                {{ form.address2.errors }}
+            </div>
+
+            <!-- country -->
+            <div class="mb-3">
+                {{ form.country.label_tag }}
+                {{ form.country }}
+            </div>
+
+            <!-- button update_profile-->
+            <div class="mb-2">
+                <button type="submit" class="btn btn-success w-100">
+                    Update profile
+                </button>
+            </div>
+
+            <!-- button delete_profile-->
+            <div class="mb-2">
+                <button type="submit" name="delete_profile" class="btn btn-danger w-100">
+                    Delete profile
+                </button>
+            </div>
+
+        </form>
     </div>
-    {% endif %}
-    <form method="post" novalidate>
-        {% csrf_token %}
-        {{ form.non_field_errors }}
-        <!-- email -->
-        <div class="mb-3">
-            {{ form.email.label_tag }}
-            {{ form.email }}
-            {% for error in email.errors %}
-            <div class="text-danger">{{ error }}</div>
-            {% endfor %}
-        </div>
-
-        <!-- password -->
-        <div class="mb-3">
-            {{ form.password.label_tag }}
-            {{ form.password }}
-            {% for error in form.password.errors %}
-            <div class="text-danger">{{ error }}</div>
-            {% endfor %}
-        </div>
-
-        <!-- first_name -->
-        <div class="mb-3">
-            {{ form.first_name.label_tag }}
-            {{ form.first_name }}
-            {% for error in form.first_name.errors %}
-            <div class="text-danger">{{ error }}</div>
-            {% endfor %}
-        </div>
-
-        <!-- last_name -->
-        <div class="mb-3">
-            {{ form.last_name.label_tag }}
-            {{ form.last_name }}
-            {% for error in form.last_name.errors %}
-            <div class="text-danger">{{ error }}</div>
-            {% endfor %}
-        </div>
-
-        <!-- phone -->
-        <div class="mb-3">
-            {{ form.phone.label_tag }}
-            {{ form.phone }}
-            {{ form.phone.errors.0 }}
-        </div>
-
-        <!-- postal_code -->
-        <div class="mb-3">
-            {{ form.postal_code.label_tag }}
-            {{ form.postal_code }}
-            {{ form.postal_code.errors.0 }}
-        </div>
-
-        <!-- address1 -->
-        <div class="mb-3">
-            {{ form.address1.label_tag }}
-            {{ form.address1 }}
-        </div>
-
-        <!-- address2 -->
-        <div class="mb-3">
-            {{ form.address2.label_tag }}
-            {{ form.address2 }}
-        </div>
-
-        <!-- country -->
-        <div class="mb-3">
-            {{ form.country.label_tag }}
-            {{ form.country }}
-        </div>
-
-        <!-- button update_profile-->
-        <div class="mb-2">
-            <a href="{% url 'profile_update' %}">
-                <button  type="submit" class="btn btn-success">Update profile</button>
-            </a>
-        </div>
-
-         <!-- button delete_profile-->
-        <div class="mb-2">
-            <button type="submit"  name="delete_profile" class="btn btn-danger">Delete profile</button>
-        </div>
-
-    </form>
+    {% endblock %}
 </div>
-{% endblock %}

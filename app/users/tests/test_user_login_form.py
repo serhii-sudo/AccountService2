@@ -8,11 +8,8 @@ class CustomUserLoginFormTest(TestCase):
     def setUp(self):
         self.User = get_user_model()
         self.password = "passlam123@"
-        self.user = self.User.objects.create_user( # type: ignore - разобрать
-            email="lampard@gmail.com",
-            first_name="Frank",
-            last_name="Lampard",
-            password=self.password
+        self.user = self.User.objects.create_user(  # type: ignore
+            email="lampard@gmail.com", first_name="Frank", last_name="Lampard", password=self.password
         )
 
     def test_login_form_valid(self):

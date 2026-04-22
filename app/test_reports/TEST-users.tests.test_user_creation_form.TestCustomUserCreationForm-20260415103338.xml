@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="users.tests.test_user_creation_form.TestCustomUserCreationForm-20260415103338" tests="4" file="users/tests/test_user_creation_form.py" time="0.491" timestamp="2026-04-15T10:33:38" failures="0" errors="0" skipped="0">
+	<testcase classname="users.tests.test_user_creation_form.TestCustomUserCreationForm" name="test_if_email_is_empty" time="0.006" timestamp="2026-04-15T10:33:38" file="users/tests/test_user_creation_form.py" line="61"/>
+	<testcase classname="users.tests.test_user_creation_form.TestCustomUserCreationForm" name="test_if_first_name_is_too_long" time="0.027" timestamp="2026-04-15T10:33:38" file="users/tests/test_user_creation_form.py" line="72"/>
+	<testcase classname="users.tests.test_user_creation_form.TestCustomUserCreationForm" name="test_strip_whitespace" time="0.002" timestamp="2026-04-15T10:33:38" file="users/tests/test_user_creation_form.py" line="42"/>
+	<testcase classname="users.tests.test_user_creation_form.TestCustomUserCreationForm" name="test_valid_form" time="0.457" timestamp="2026-04-15T10:33:38" file="users/tests/test_user_creation_form.py" line="20"/>
+</testsuite>

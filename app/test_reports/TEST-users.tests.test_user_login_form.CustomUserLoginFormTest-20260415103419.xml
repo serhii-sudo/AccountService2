@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="users.tests.test_user_login_form.CustomUserLoginFormTest-20260415103419" tests="2" file="users/tests/test_user_login_form.py" time="0.907" timestamp="2026-04-15T10:34:20" failures="0" errors="0" skipped="0">
+	<testcase classname="users.tests.test_user_login_form.CustomUserLoginFormTest" name="test_login_form_invalid_password" time="0.457" timestamp="2026-04-15T10:34:20" file="users/tests/test_user_login_form.py" line="20"/>
+	<testcase classname="users.tests.test_user_login_form.CustomUserLoginFormTest" name="test_login_form_valid" time="0.450" timestamp="2026-04-15T10:34:20" file="users/tests/test_user_login_form.py" line="15"/>
+</testsuite>

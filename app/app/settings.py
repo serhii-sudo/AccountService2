@@ -19,7 +19,6 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
@@ -29,9 +28,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost", "192.168.0.212"]
-
-
+ALLOWED_HOSTS = ["0.0.0.0", "127.0.0.1", "localhost", "192.168.0.212"]
 
 # Application definition
 
@@ -45,6 +42,7 @@ INSTALLED_APPS = [
     "users",
 ]
 
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -53,9 +51,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    'users.middleware.SessionExpiryMiddleware', # connect to middleware.py
+    "users.middleware.SessionExpiryMiddleware",  # connect to middleware.py
 ]
-
 
 ROOT_URLCONF = "app.urls"
 
@@ -76,10 +73,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "app.wsgi.application"
 
-
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# Если переменная среды DB_HOST присутствует, значит мы работаем в контейнере
+# DB_HOST = os.environ.get('DB_HOST', 'localhost') # по умолчанию localhost если переменная не задана
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
@@ -90,7 +88,6 @@ DATABASES = {
         "PORT": os.getenv("PORT"),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -110,7 +107,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
@@ -122,14 +118,31 @@ USE_I18N = True
 
 USE_TZ = True
 
+# Настройки уведомлений Gmail
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+"""Проверка отправка сообщений на реальный домен.
+ При развертывании проекта в чужой среде - подставить свои данные."""
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")  # email отправителя
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")  # пароль
+DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL ")  # email получателя
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = "/static/"   # — URL для доступа к статическим файлам через браузер
-STATIC_ROOT = "/app/staticfiles"
-STATICFILES_DIRS = [BASE_DIR / 'static']
+# URL для доступа через браузер
+STATIC_URL = "/static/"
 
+# Папка исходной статики (CSS, JS, изображения)
+STATICFILES_DIRS = [os.path.join(BASE_DIR / "static")]
+
+# Папка, куда collectstatic собирает файлы для Nginx
+STATIC_ROOT = "/app/staticfiles"
 
 """redis"""
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
@@ -146,23 +159,28 @@ CACHES = {
     }
 }
 
-SESSION_COOKIE_AGE = 60    # время жизни сессии в секундах
+# Сессии
+SESSION_COOKIE_AGE = 60  # время жизни сессии в секундах
 SESSION_SAVE_EVERY_REQUEST = True  # сохраняет сессию при каждом запросе
 
 # безопасность куки
 SESSION_COOKIE_SECURE = False  # отправляет куки по https
 SESSION_COOKIE_HTTPONLY = True  # js не сможет прочитать куки для атаки
-SESSION_COOKIE_SAMESITE = "Lax" # защита от csrf атак
-SESSION_EXPIRE_AT_BROWSER_CLOSE = False # Сессия не исчезает при закрытии браузера
-SESSION_SAVE_EVERY_REQUEST = False # noqa
+SESSION_COOKIE_SAMESITE = "Lax"  # защита от csrf атак
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # Сессия не исчезает при закрытии браузера
+SESSION_SAVE_EVERY_REQUEST = False  # noqa
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-LOGIN_URL = 'login'  # имя URL из urls.py для логина
-LOGIN_REDIRECT_URL = 'profile_update'  # куда перенаправлять после успешного логина
-LOGOUT_REDIRECT_URL = 'home'
+LOGIN_URL = "login"  # имя URL из urls.py для логина
+LOGIN_REDIRECT_URL = "profile_update"  # куда перенаправлять после успешного логина
+LOGOUT_REDIRECT_URL = "home"
 
 AUTH_USER_MODEL = "users.CustomUser"
+
+# тестирование
+TEST_RUNNER = "xmlrunner.extra.djangotestrunner.XMLTestRunner"  # подключаем раннер для отчета по тестам
+TEST_OUTPUT_DIR = "test_reports"  # директория с отчетами по тестам

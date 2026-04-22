@@ -1,5 +1,5 @@
 import bleach
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, PasswordResetForm, SetPasswordForm
 from django import forms
 from django.contrib.auth import authenticate
 from django.core.exceptions import ValidationError
@@ -12,7 +12,7 @@ from users.models import CustomUser
 
 class CustomUserCreationForm(StripCharFieldMixin, UserCreationForm):
     error_messages = {
-        'password_mismatch': 'Passwords do not match',
+        "password_mismatch": "Passwords do not match",
     }
     # Создание поля email, которое является полем для ввода электронной почты.
     # forms.EmailField — это тип поля формы Django, предназначенный для валидации email-адресов.
@@ -21,69 +21,45 @@ class CustomUserCreationForm(StripCharFieldMixin, UserCreationForm):
         min_length=5,
         max_length=66,  # Максимальная длина email — 66 символов.
         widget=forms.EmailInput(  # Указывает, что для этого поля используется HTML-элемент <input type="email">.
-            attrs={  # Атрибуты HTML для поля ввода.
-                **BASE_WIDGET_ATTRS,
-                'placeholder': 'Your email'
-            }
+            attrs={**BASE_WIDGET_ATTRS, "placeholder": "Your email"}  # Атрибуты HTML для поля ввода.
         ),
-        error_messages=ERROR_MESSAGES["email"]
+        error_messages=ERROR_MESSAGES["email"],
     )
 
     first_name = forms.CharField(
         required=True,
         min_length=2,
         max_length=50,
-        widget=forms.TextInput(
-            attrs={
-                **BASE_WIDGET_ATTRS,
-                "placeholder": "Your first name"
-            }
-        ),
-        error_messages=ERROR_MESSAGES["first_name"]
+        widget=forms.TextInput(attrs={**BASE_WIDGET_ATTRS, "placeholder": "Your first name"}),
+        error_messages=ERROR_MESSAGES["first_name"],
     )
 
     last_name = forms.CharField(
         required=True,
         min_length=2,
         max_length=50,
-        widget=forms.TextInput(
-            attrs={
-                **BASE_WIDGET_ATTRS,
-                "placeholder": "Your last name"
-            }
-        ),
-        error_messages=ERROR_MESSAGES["last_name"]
+        widget=forms.TextInput(attrs={**BASE_WIDGET_ATTRS, "placeholder": "Your last name"}),
+        error_messages=ERROR_MESSAGES["last_name"],
     )
 
     password1 = forms.CharField(
         required=True,
         min_length=8,
         max_length=66,
-        widget=forms.PasswordInput(
-            attrs={
-                **BASE_WIDGET_ATTRS,
-                "placeholder": "Password"
-            }
-        ),
-        error_messages=ERROR_MESSAGES["password1"]
+        widget=forms.PasswordInput(attrs={**BASE_WIDGET_ATTRS, "placeholder": "Password"}),
+        error_messages=ERROR_MESSAGES["password1"],
     )
 
     password2 = forms.CharField(
         required=True,
         min_length=8,
         max_length=66,
-        widget=forms.PasswordInput(
-            attrs={
-                **BASE_WIDGET_ATTRS,
-                "placeholder": "Confirm password"
-            }
-        ),
-        error_messages=ERROR_MESSAGES["password2"]
-
+        widget=forms.PasswordInput(attrs={**BASE_WIDGET_ATTRS, "placeholder": "Confirm password"}),
+        error_messages=ERROR_MESSAGES["password2"],
     )
     # Чекбокс согласия на получение маркетинговых рассылок
     # Поле для согласия на получение маркетинговых сообщений.
-    # forms.BooleanField — это поле для флажка (checkbox).
+    # BooleanField — это поле для флажка (checkbox).
     marketing_consent1 = forms.BooleanField(
         required=False,  # Поле необязательное, пользователь может не отмечать флажок.
         label="I agree to receive commercial, promotional, and marketing communications.",
@@ -114,7 +90,6 @@ class CustomUserCreationForm(StripCharFieldMixin, UserCreationForm):
             "marketing_consent2",
         )
 
-
     # Метод валидации email (будет вызван автоматически при вызове form.is_valid())
     def clean_email(self):
         email = self.cleaned_data.get("email").lower()  # Получаем введённый email
@@ -138,14 +113,8 @@ class CustomUserLoginForm(StripCharFieldMixin, AuthenticationForm):
         required=True,
         min_length=5,
         max_length=66,
-        widget=forms.TextInput(
-            attrs={
-                "autofocus": True,
-                **BASE_WIDGET_ATTRS,
-                "placeholder": "Your email"
-            }
-        ),
-        error_messages=ERROR_MESSAGES["email"]
+        widget=forms.TextInput(attrs={"autofocus": True, **BASE_WIDGET_ATTRS, "placeholder": "Your email"}),
+        error_messages=ERROR_MESSAGES["email"],
     )
 
     password = forms.CharField(
@@ -153,23 +122,18 @@ class CustomUserLoginForm(StripCharFieldMixin, AuthenticationForm):
         min_length=8,
         max_length=66,
         label="Password",
-        widget=forms.PasswordInput(
-            attrs={
-                **BASE_WIDGET_ATTRS,
-                "placeholder": "Your password"
-            }
-        ),
-        error_messages=ERROR_MESSAGES["password1"]
+        widget=forms.PasswordInput(attrs={**BASE_WIDGET_ATTRS, "placeholder": "Your password"}),
+        error_messages=ERROR_MESSAGES["password1"],
     )
 
     def clean(self):
-        email = self.cleaned_data.get('username')
-        password = self.cleaned_data.get('password')
+        email = self.cleaned_data.get("username")
+        password = self.cleaned_data.get("password")
 
         if email and password:
             self.user_cache = authenticate(self.request, username=email, password=password)
             if self.user_cache is None:
-                raise forms.ValidationError('invalid e-mail or password!')
+                raise forms.ValidationError("invalid e-mail or password!")
         return self.cleaned_data
 
 
@@ -178,16 +142,9 @@ class CustomUserUpdateForm(StripCharFieldMixin, forms.ModelForm):
         required=False,
         min_length=5,
         max_length=66,
-        label='Email',
-        widget=forms.EmailInput(
-            attrs={
-                **BASE_WIDGET_ATTRS,
-                "placeholder": "your@email.com",
-                "autocomplete": "email"
-            }
-        ),
-        error_messages=ERROR_MESSAGES["email"]
-
+        label="Email",
+        widget=forms.EmailInput(attrs={**BASE_WIDGET_ATTRS, "placeholder": "your@email.com", "autocomplete": "email"}),
+        error_messages=ERROR_MESSAGES["email"],
     )
 
     password = forms.CharField(
@@ -195,27 +152,17 @@ class CustomUserUpdateForm(StripCharFieldMixin, forms.ModelForm):
         min_length=8,
         max_length=66,
         label="New_Password",
-        widget=forms.PasswordInput(
-            attrs={
-                **BASE_WIDGET_ATTRS,
-                "placeholder": "Your new_password"
-            }
-        ),
-        error_messages=ERROR_MESSAGES["password1"]
+        widget=forms.PasswordInput(attrs={**BASE_WIDGET_ATTRS, "placeholder": "Your new_password"}),
+        error_messages=ERROR_MESSAGES["password1"],
     )
 
     first_name = forms.CharField(
         required=False,
         min_length=2,
         max_length=50,
-        label='First name',
-        widget=forms.TextInput(
-            attrs={
-                **BASE_WIDGET_ATTRS,
-                "placeholder": "Your first name"
-            }
-        ),
-        error_messages=ERROR_MESSAGES["first_name"]
+        label="First name",
+        widget=forms.TextInput(attrs={**BASE_WIDGET_ATTRS, "placeholder": "Your first name"}),
+        error_messages=ERROR_MESSAGES["first_name"],
     )
 
     last_name = forms.CharField(
@@ -223,13 +170,8 @@ class CustomUserUpdateForm(StripCharFieldMixin, forms.ModelForm):
         min_length=2,
         max_length=50,
         label="Last name",
-        widget=forms.TextInput(
-            attrs={
-                **BASE_WIDGET_ATTRS,
-                "placeholder": "Your last name"
-            }
-        ),
-        error_messages=ERROR_MESSAGES["last_name"]
+        widget=forms.TextInput(attrs={**BASE_WIDGET_ATTRS, "placeholder": "Your last name"}),
+        error_messages=ERROR_MESSAGES["last_name"],
     )
 
     phone = forms.CharField(
@@ -237,146 +179,151 @@ class CustomUserUpdateForm(StripCharFieldMixin, forms.ModelForm):
         label="Phone number",
         validators=[
             RegexValidator(
-                r'^\+[1-9]\d+$',  # Международный формат E.164
-                message='Enter a valid phone number (e.g. +1234567890...)'
+                r"^\+[1-9]\d+$",  # Международный формат E.164
+                message="Enter a valid phone number (e.g. +1234567890...)",
             )
         ],
         widget=forms.TextInput(
             attrs={
                 **BASE_WIDGET_ATTRS,
-                'placeholder': 'The phone starts with +1234567890...',
-                'pattern': r'^\+[1-9]\d+$'  # HTML5 валидация
+                "placeholder": "The phone starts with +1234567890...",
+                "pattern": r"^\+[1-9]\d+$",  # HTML5 валидация
             }
         ),
-        error_messages={
-            'invalid': 'Enter a valid  phone number'
-        },
-
-        help_text="International format with optional '+'"
+        error_messages={"invalid": "Enter a valid  phone number"},
+        help_text="International format with optional '+'",
     )
 
     postal_code = forms.CharField(
         required=False,
-        validators=[
-            RegexValidator(
-                r'^[A-Za-z\d\-]+$',
-                'Enter a valid postal code'
-            )
-        ],
-        widget=forms.TextInput(
-            attrs={
-                **BASE_WIDGET_ATTRS,
-                'placeholder': 'Postal code'
-            }
-        ),
-        error_messages={
-            'invalid': 'Enter a valid postal code'
-        }
+        validators=[RegexValidator(r"^[A-Za-z\d\-]{1,10}$", "Invalid postal code")],
+        widget=forms.TextInput(attrs={**BASE_WIDGET_ATTRS, "placeholder": "Postal code"}),
+        error_messages=ERROR_MESSAGES["postal_code"],
     )
 
     # Поле для ввода адреса (основная часть, например, улица).
     address1 = forms.CharField(
         required=False,  # Поле необязательное.
         max_length=100,  # Максимальная длина — 100 символов.
-        widget=forms.TextInput(attrs={  # HTML-элемент <input type="text">.
-            **BASE_WIDGET_ATTRS,  # Распаковка общих атрибутов.
-            'placeholder': 'Street address'  # Плейсхолдер с подсказкой.
-        })
+        widget=forms.TextInput(
+            attrs={  # HTML-элемент <input type="text">.
+                **BASE_WIDGET_ATTRS,  # Распаковка общих атрибутов.
+                "placeholder": "Street address",  # Плейсхолдер с подсказкой.
+            }
+        ),
     )
 
     # Поле для ввода дополнительной части адреса (например, квартира).
     address2 = forms.CharField(
         required=False,  # Поле необязательное.
         max_length=100,  # Максимальная длина — 100 символов.
-        widget=forms.TextInput(
-            attrs={
-                **BASE_WIDGET_ATTRS,
-                'placeholder': 'Apartment, suite, etc.'
-            }
-        )
+        widget=forms.TextInput(attrs={**BASE_WIDGET_ATTRS, "placeholder": "Apartment, suite, etc."}),
     )
 
-    #Поле для ввода страны.
+    # Поле для ввода страны.
     country = forms.CharField(
-        required=False,
-        max_length=100,
-        widget=forms.TextInput(
-            attrs={
-                **BASE_WIDGET_ATTRS,
-                'placeholder': 'Country'
-            }
-        )
+        required=False, max_length=100, widget=forms.TextInput(attrs={**BASE_WIDGET_ATTRS, "placeholder": "Country"})
     )
-
 
     class Meta:
         model = CustomUser
-        fields = [
-            'first_name', 'last_name', 'email', 'country',
-            'address1', 'address2', 'postal_code', 'phone'
-        ]
+        fields = ["first_name", "last_name", "email", "country", "address1", "address2", "postal_code", "phone"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)  # Важно: вызывает миксин + ModelForm
+        """инициализируем форму"""
 
-        if not hasattr(CustomUser, 'COUNTRY_CHOICES'):
+        if not hasattr(CustomUser, "COUNTRY_CHOICES"):
             raise AttributeError("CustomUser model must define COUNTRY_CHOICES")
 
             # Для страны и региона лучше использовать select
-        self.fields['country'].widget = forms.Select(
+        self.fields["country"].widget = forms.Select(
             attrs={**BASE_WIDGET_ATTRS},  # 1. Атрибуты HTML-элемента
-            choices=[('', 'Select country')] + CustomUser.COUNTRY_CHOICES  # 2. Список выбора
+            choices=[("", "Select country")] + CustomUser.COUNTRY_CHOICES,  # 2. Список выбора
         )
 
     def clean_phone(self):
-        phone = self.cleaned_data.get('phone', '').strip()
+        phone = self.cleaned_data.get("phone", "")
         if not phone:
-            return ''
+            return ""
 
-        world_operators = [
-            '+1202', '+9641', '+4420', '+4930', '+331',
-            '+21821', '+5411', '+21321', '+22527', '+2721'
-        ]
+        world_operators = ["+1202", "+9641", "+4420", "+4930", "+331", "+21821", "+5411", "+21321", "+22527", "+2721"]
         if not any(phone.startswith(code) for code in world_operators):
             raise ValidationError(
-                f" Not correct operator code! {', '.join(world_operators)}"
+                f" Not correct operator code!\n "
+                f"Select the code from the field of Country\n"
+                f"{', '.join(world_operators)}"
             )
         return phone
 
-
     def clean_email(self):
-        email = self.cleaned_data.get('email').lower()
+        email = self.cleaned_data.get("email").lower()
         if CustomUser.objects.filter(email=email).exclude(pk=self.instance.pk).exists():
-            raise forms.ValidationError('This email is already registered')
+            raise forms.ValidationError("This email is already registered")
         return email
 
+    def clean_postal_code(self):
+        postal_code = self.cleaned_data.get("postal_code")
+        if not postal_code:
+            return ""
+        return postal_code
 
     def clean(self):
         cleaned_data = super().clean()
-        for field_name in ['address1', 'address2', 'city']:
+
+        for field_name in ["address1", "address2"]:
             if field_name in cleaned_data:
                 cleaned_data[field_name] = bleach.clean(cleaned_data[field_name])
-        if cleaned_data.get('address1') and not cleaned_data.get('city'):
-            self.add_error('city', 'City is required when providing address!')
+
+        address1 = cleaned_data.get("address1")
+        address2 = cleaned_data.get("address2")
+
+        # если заполнен только address1
+        if address1 and not address2:
+            self.add_error("address2", "Заполните address2, если указан address1")
+
+        # если заполнен только address2
+        if address2 and not address1:
+            self.add_error("address1", "Заполните address1, если указан address2")
         return cleaned_data
 
-
     def save(self, commit=True):
-        user = super().save(commit=False)
-        password = self.cleaned_data.get('password')
+        user: CustomUser = super().save(commit=False)
+        # сохраняем телефон
+        user.phone = self.cleaned_data.get("phone")
+        # хешируем пароль пользователя через set.password() и сохраняем
+        password = self.cleaned_data.get("password")
         if password:
             user.set_password(password)
         if commit:
             user.save()
-            self.save_m2m()
         return user
 
 
+class CustomPasswordResetForm(StripCharFieldMixin, PasswordResetForm):
+    email = forms.EmailField(
+        label="Email",
+        required=True,
+        min_length=5,
+        max_length=66,
+        widget=forms.EmailInput(attrs={**BASE_WIDGET_ATTRS, "placeholder": "Your email"}),
+        error_messages=ERROR_MESSAGES["email"],
+    )
 
 
+class CustomPasswordResetConfirmForm(StripCharFieldMixin, SetPasswordForm):
+    new_password1 = forms.CharField(
+        required=True,
+        min_length=8,
+        max_length=66,
+        widget=forms.PasswordInput(attrs={**BASE_WIDGET_ATTRS, "placeholder": " Enter a new password"}),
+        error_messages=ERROR_MESSAGES["password1"],
+    )
 
-
-
-
-
-
+    new_password2 = forms.CharField(
+        required=True,
+        min_length=8,
+        max_length=66,
+        widget=forms.PasswordInput(attrs={**BASE_WIDGET_ATTRS, "placeholder": "Confirm new password"}),
+        error_messages=ERROR_MESSAGES["password2"],
+    )

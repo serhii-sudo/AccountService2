@@ -5,21 +5,18 @@ from django.utils.html import strip_tags
 
 
 class CustomUserManager(BaseUserManager):
-    # метод для создания обычного пользователя
+    """override - изменяем поведение родительского метода def create_user() под свой проект,
+    то есть, пишем свое поведение, не изменяя имени самого метода"""
+
     def create_user(self, email, first_name, last_name, password=None, **extra_fields):
         if not email:
-            raise ValueError('The give email must be set')
+            raise ValueError("The given email must be set")
 
         # Нормализация email (приведение к нижнему регистру, обработка доменной части)
         email = self.normalize_email(email)
 
-        # Создание объекта пользователя (но еще не сохранение в БД)
-        user = self.model(
-            email=email,
-            first_name=first_name,
-            last_name=last_name,
-            **extra_fields
-        )
+        # Создание объекта пользователя (но еще нет сохранение в БД)
+        user = self.model(email=email, first_name=first_name, last_name=last_name, **extra_fields)
 
         # установка и хеширование пароля
         user.set_password(password)
@@ -33,7 +30,6 @@ class CustomUserManager(BaseUserManager):
 
     # Метод для создания суперпользователя (администратора)
     def create_superuser(self, email, first_name, last_name, password=None, **extra_fields):
-
         extra_fields.setdefault("is_staff", True)  # доступ к админке
         extra_fields.setdefault("is_superuser", True)  # все права
 
@@ -47,24 +43,24 @@ class CustomUserManager(BaseUserManager):
 
 class CustomUser(AbstractUser):
     COUNTRY_CHOICES = [
-        ('', 'Select country'),
-        ('US', 'United States, Washington +1 202'),
-        ('IQ', 'Iraq, Baghdad +964 1'),
-        ('GB', 'United Kingdom, London +44 20'),
-        ('DE', 'Germany, Berlin +49 30'),
-        ('FR', 'France, Paris +33 1'),
-        ('LY', 'Libya, Tripoli +218 21'),
-        ('AR', 'Argentina, Buenos Aires +54 11'),
-        ('DZ', 'Algeria, Algiers +213 21'),
-        ('CI', "Côte d'Ivoire, Abidjan +225 27"),
-        ('ZA', 'South Africa, Cape Town +27 21')
+        ("", "Select country"),
+        ("US", "United States, Washington +1 202"),
+        ("IQ", "Iraq, Baghdad +964 1"),
+        ("GB", "United Kingdom, London +44 20"),
+        ("DE", "Germany, Berlin +49 30"),
+        ("FR", "France, Paris +33 1"),
+        ("LY", "Libya, Tripoli +218 21"),
+        ("AR", "Argentina, Buenos Aires +54 11"),
+        ("DZ", "Algeria, Algiers +213 21"),
+        ("CI", "Côte d'Ivoire, Abidjan +225 27"),
+        ("ZA", "South Africa, Cape Town +27 21"),
     ]
 
     # оставляем "Select country" первым, остальные сортируем по названию
     COUNTRY_CHOICES = sorted(COUNTRY_CHOICES[1:], key=lambda x: x[1])
 
-
-    # Обычно для страны используют max_length=2 (если хранят ISO-коды типа US, RU, GB), потому что выборка идёт по коду, а не по полному названию.
+    # Обычно для страны используют max_length=2 (если хранят ISO-коды типа US, RU, GB), потому что выборка идёт по коду,
+    # а не по полному названию.
     email = models.EmailField(unique=True, max_length=70)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
@@ -79,6 +75,7 @@ class CustomUser(AbstractUser):
     username = models.CharField(max_length=50, unique=True, blank=True, null=True)
     # Указание кастомного менеджера пользователей
     objects = CustomUserManager()
+
     # Указываем, что поле email будет использоваться как идентификатор пользователя (вместо username)
     USERNAME_FIELD = "email"
 
@@ -88,6 +85,9 @@ class CustomUser(AbstractUser):
         return self.email
 
     def clean(self):
+        """Санитизация полей для безопасного сохранения в бд
+        от html-тегов и js-скриптов"""
+
         for field in [
             "address1",
             "address2",
@@ -99,6 +99,3 @@ class CustomUser(AbstractUser):
             value = getattr(self, field)
             if value:
                 setattr(self, field, strip_tags(value))
-
-
-
